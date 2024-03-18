@@ -1,5 +1,8 @@
 from flask import Flask, render_template
 from dotenv import load_dotenv
+from forms import RegistrationForm
+from flask_wtf import FlaskForm
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -31,6 +34,11 @@ def home():
 @app.route("/about")
 def about():
     return render_template("about.html", title='About')
+
+@app.route("/register")
+def register():
+    form = RegistrationForm()
+    return render_template("register.html", title='Register', form=form)
 
 
 if __name__ == "__main__":
