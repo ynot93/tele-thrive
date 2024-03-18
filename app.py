@@ -7,6 +7,8 @@ from flask_wtf import FlaskForm
 load_dotenv()
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = 'd6dafdfc696f40436c0a37834456059f'
+
 users = [
     {
         'first_name': "Tony",
