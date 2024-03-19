@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
+<h1 class="cover-heading">Connecting you with licensed therapists for virtual mental health support.</h1>
+<p class="lead">The TeleThrive project aims to address the challenge of limited access to mental health
+    services, particularly for individuals who face barriers such as geographical distance, stigma, or
+    scheduling constraints.
+</p>
 {% for user in users %}
     <h1>{{ user.first_name }}</h1>
     <p>Has 2 appointments on {{ user.appointment }}</p>

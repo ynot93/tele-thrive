@@ -1,8 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, flash, redirect
+from forms import LoginForm
 from dotenv import load_dotenv
 
 load_dotenv()
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'd6dafdfc696f40436c0a37834456059f'
 
 users = [
     {
@@ -33,9 +36,16 @@ def about():
     return render_template("about.html", title='About')
 
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
-    return render_template("login.html", title='Login')
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'tony@blog.com' and form.password.data == 'password':
+            flash(f'You have successfully logged in!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash(f'Login Unsuccessful! Check username and Password', 'danger')
+    return render_template("login.html", title='Login', form=form)
 
 
 if __name__ == "__main__":
