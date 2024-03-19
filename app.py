@@ -1,8 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, redirect, url_for
 from dotenv import load_dotenv
+from forms import RegistrationForm
+from flask_wtf import FlaskForm
+
 
 load_dotenv()
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'd6dafdfc696f40436c0a37834456059f'
 
 users = [
     {
@@ -31,6 +36,14 @@ def home():
 @app.route("/about")
 def about():
     return render_template("about.html", title='About')
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'sucess')
+        return redirect(url_for('home'))
+    return render_template("register.html", title='Register', form=form)
 
 
 if __name__ == "__main__":
