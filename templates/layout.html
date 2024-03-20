@@ -20,9 +20,9 @@
             <div class="inner">
                 <h3 class="masthead-brand">TeleThrive</h3>
                 <nav class="nav nav-masthead justify-content-center">
-                    <a class="nav-link active" href="#">Home</a>
-                    <a class="nav-link" href="#">About us</a>
-                    <a class="nav-link" href="#">Register</a>
+                    <a class="nav-link active" href="{{ url_for('home') }}">Home</a>
+                    <a class="nav-link" href="{{ url_for('about') }}">About us</a>
+                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
                 </nav>
             </div>
         </header>

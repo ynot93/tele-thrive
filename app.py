@@ -1,13 +1,53 @@
+import os
+from datetime import datetime
 from flask import Flask, render_template, url_for, flash, redirect
+from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from forms import RegistrationForm, LoginForm
 from flask_wtf import FlaskForm
 
-
 load_dotenv()
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+db = SQLAlchemy(app)
 
-app.config['SECRET_KEY'] = 'd6dafdfc696f40436c0a37834456059f'
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_profile = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    appointments = db.relationship('Appointment', backref='client', lazy=True)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_profile}')"
+
+class Therapist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    therapist_name = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_profile = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    specialization = db.Column(db.String(100), nullable=False)
+    appointments = db.relationship('Appointment', backref='doctor', lazy=True)
+
+    def __repr__(self):
+        return f"Therapist('{self.therapist_name}', '{self.email}', '{self.image_profile}', '{self.appointments}')"
+
+
+class Appointment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    appointment_name = db.Column(db.Text, nullable=False)
+    appointment_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    therapist_id = db.Column(db.Integer, db.ForeignKey('therapist.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+
+    def __repr__(self):
+        return f"Appointment('{self.appointment_name}', '{self.appointment_date}')"
+
 
 users = [
     {
