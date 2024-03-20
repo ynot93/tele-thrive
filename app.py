@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect
 from dotenv import load_dotenv
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, TherapistRegistrationForm
 from flask_wtf import FlaskForm
 
 
@@ -57,6 +57,14 @@ def login():
             flash(f'Login Unsuccessful! Check username and Password', 'danger')
     return render_template("login.html", title='Login', form=form)
 
+
+@app.route("/register/therapist", methods=['GET', 'POST'])
+def register_therapist():
+        form = TherapistRegistrationForm()
+        if form.validate_on_submit():
+            flash(f'Therapist account created for {form.first_name.data} {form.last_name.data}!', 'success')
+            return redirect(url_for('home'))
+        return render_template("register_therapist.html", title='Therapist Registration', form=form)
 
 if __name__ == "__main__":
     app.run(debug=True)

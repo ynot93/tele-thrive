@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Join the Future of Therapy: Apply now with TeleThrive!</h2>
+        <div class="job-description">
+            <h3>Job Description</h3>
+            <p>We are looking for experienced therapists who are passionate about helping people improve their mental well-being. As a therapist on TeleThrive, you will have the opportunity to connect with clients remotely and provide counseling and support through our secure platform.</p>
+            <p>Key responsibilities include:</p>
+            <ul>
+                <li>Conducting therapy sessions via video calls</li>
+                <li>Developing treatms tailored to individual client needs</li>
+                <li>Providing support and gui clients facing mental health challenges</li>
+            </ul>
+        </div>
+        <div class="how-we-work">
+            <h3>How We Work</h3>
+            <p>At TeleThrive, w to make mental health care accessible and convenient for everyone. Our platform connects clients with qualified therapists, allowing them to receive professional support from the comfort of their own homes.</p>
+            <p>Here's how our platform woks:</p>
+            <ol>
+                <li>Clients create an account and complete a brief assessment to match them with the most suitable therapist.</li>
+                <li>Therapists conduct sessions with clients re video calls, providing counseling and guidance tailored to their needs.</li>
+                <li>Both clients and therapists have o tools and resources to facilitate effective communication and treatment.</li>
+            </ol>
+        </div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+        <div class="form-group">
+            <p class="font-weight-bold h4">Start Application</p>
+            {{ form.first_name.label }} {{ form.first_name(size=20, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.last_name.label }} {{ form.last_name(size=20, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.username.label }} {{ form.username(size=20, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.email.label }} {{ form.email(size=20, class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }} {{ form.password(size=20, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.confirm_password.label }} {{ form.confirm_password(size=20, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.license_number.label }} {{ form.license_number(size=20, class="form-control") }}
+            {% for error in form.license_number.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+{% endblock %}
