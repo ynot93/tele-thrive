@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm
 import app
 
 from models.appointment import Appointment
@@ -54,3 +54,24 @@ def login():
         else:
             flash(f'Login Unsuccessful! Check username and Password', 'danger')
     return render_template("login.html", title='Login', form=form)
+
+
+@app.route("/register/therapist", methods=['GET', 'POST'])
+def register_therapist():
+        form = TherapistRegistrationForm()
+        if form.validate_on_submit():
+            flash(f'Therapist account created for {form.first_name.data} {form.last_name.data}!', 'success')
+            return redirect(url_for('home'))
+        return render_template("register_therapist.html", title='Therapist Registration', form=form)
+
+@app.route("/login/therapist", methods=['GET', 'POST'])
+def login_therapist():
+    form = TherapistLoginForm()
+    if form.validate_on_submit():
+        therapist = Therapist.query.filter_by(email=form.email.data).first()
+        if therapist and therapist.check_password(form.password.data):
+            flash('You have successfully logged in as a therapist!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful! Please check email and password', 'danger')
+    return render_template('login_therapist.html', title='Therapist Login', form=form)
