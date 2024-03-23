@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm
-import app
+from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm
+from . import app
 
 from models.appointment import Appointment
 from models.therapist import Therapist
@@ -35,6 +35,7 @@ def home():
 def about():
     return render_template("about.html", title='About')
 
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -58,11 +59,12 @@ def login():
 
 @app.route("/register/therapist", methods=['GET', 'POST'])
 def register_therapist():
-        form = TherapistRegistrationForm()
-        if form.validate_on_submit():
-            flash(f'Therapist account created for {form.first_name.data} {form.last_name.data}!', 'success')
-            return redirect(url_for('home'))
-        return render_template("register_therapist.html", title='Therapist Registration', form=form)
+    form = TherapistRegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Therapist account created for {form.first_name.data} {form.last_name.data}!', 'success')
+        return redirect(url_for('home'))
+    return render_template("register_therapist.html", title='Therapist Registration', form=form)
+
 
 @app.route("/login/therapist", methods=['GET', 'POST'])
 def login_therapist():

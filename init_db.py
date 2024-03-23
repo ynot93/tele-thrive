@@ -8,8 +8,8 @@ user2 = User(username='Nadia', email='nadia@test.com', password='password2', rol
 user3 = User(username='Milly', email='milly@test.com', password='password3', role='admin')
 user4 = User(username='Tim', email='tim@test.com', password='password4', role='client')
 
-therapist1 = Therapist(therapist_name='Daktari', email='doc1@test.com', specialization='Depression', password='password5')
-therapist2 = Therapist(therapist_name='Doc', email='doc2@test.com', specialization='Anxiety', password='password6')
+therapist1 = Therapist(therapist_name='Daktari', email='doc1@test.com', specialization='Depression', license_number=12345, password='password5')
+therapist2 = Therapist(therapist_name='Doc', email='doc2@test.com', specialization='Anxiety', license_number=67890, password='password6')
 
 appointment1 = Appointment(appointment_name='Tony\'s depression appointment', status='scheduled', user_id=1, therapist_id=1)
 
