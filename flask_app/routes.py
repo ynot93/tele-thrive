@@ -2,9 +2,9 @@ from flask import render_template, url_for, flash, redirect
 from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm
 from . import app
 
-from models.appointment import Appointment
-from models.therapist import Therapist
-from models.user import User
+from flask_app.models.appointment import Appointment
+from flask_app.models.therapist import Therapist
+from flask_app.models.user import User
 
 
 users = [

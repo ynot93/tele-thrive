@@ -1,5 +1,9 @@
-from app import db, User, Therapist, Appointment
+from flask_app import db, app
+from flask_app.models.user import User
+from flask_app.models.therapist import Therapist
+from flask_app.models.appointment import Appointment
 
+app.app_context().push()
 db.drop_all()
 db.create_all()
 
