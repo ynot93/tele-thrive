@@ -1,13 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Upcoming Appointments</h2>
-    {% if appointments %}
-        <ul>
-           {% for appointment in appointments %}
-                <li>{{ appointment.appointment_name }} - {{ appointment.appointment_date }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No upcoming appointments found.</p>
-    {% endif %}
+    <div class="content-section">
+        <h2>Upcoming Appointments</h2>
+        {% if appointments %}
+            <ul class="list-group">
+                {% for appointment in appointments %}
+                     <li class="list-group-item">{{ appointment.appointment_name }} - {{ appointment.appointment_date }}</li>
+                 {% endfor %}
+             </ul>
+        {% else %}
+            <p>No upcoming appointments found.</p>
+        {% endif %}
+    </div>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Need to schedule a new appointment? <a class="ml-2" href="{{ url_for('cppointment') }}">SNow</a>
+        </small>
+    </div>
 {% endblock %}
