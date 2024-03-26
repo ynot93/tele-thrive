@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Upcoming Appointments</h2>
+    {% if appointments %}
+        <ul>
+           {% for appointment in appointments %}
+                <li>{{ appointment.appointment_name }} - {{ appointment.appointment_date }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No upcoming appointments found.</p>
+    {% endif %}
+{% endblock %}
