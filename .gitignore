@@ -25,3 +25,6 @@ database.db
 
 # Ignore sqlite instance
 instance/
+
+# Ignoree
+.DS_Store

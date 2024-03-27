@@ -49,11 +49,12 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'tony@blog.com' and form.password.data == 'password':
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.password == form.password.data:
             flash(f'You have successfully logged in!', 'success')
             return redirect(url_for('home'))
         else:
-            flash(f'Login Unsuccessful! Check username and Password', 'danger')
+            flash(f'Login Unsuccessful! Check username and password', 'danger')
     return render_template("login.html", title='Login', form=form)
 
 
