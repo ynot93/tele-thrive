@@ -15,17 +15,21 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a href="{{ url_for('home') }}">TeleThrive</a>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link active" href="{{ url_for('home') }}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About us</a></li>
-                <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a></li>
-                <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('register_therapist') }}">For Therapists</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div class="container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand">TeleThrive</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link active" href="{{ url_for('home') }}">Home</a>
+                    <a class="nav-link" href="{{ url_for('about') }}">About us</a>
+                    <a class="nav-item nav-link active" href="{{ url_for('register') }}">Register</a>
+                    <a class="nav-item nav-link active" href="{{ url_for('register_therapist') }}">For Therapists</a>
+                    {% if session.logged_in %}
+                        <a class="nav-item nav-link active" href="{{ url_for('logout') }}">Logout</a>
+                    {% endif %}    
+                </nav>
+            </div>
+        </header>
 
     <main role="main" class="inner cover">
         <div class="container">
