@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+     <h2 class="mb-4">Rate Therapist</h2>
+     <div class="card">
+         <div class="card-body">
+             {% if therapist %}
+                 <p class="card-text">Therapist: {{ therapist.name }}</p>
+                 <form method="POST" action="{{ url_for('rate_therapist', therapist_id=therapist.id) }}">
+                     <div class="form-group">
+                         <label for="rating">Rating:</label>
+                         <input type="number" id="rating" name="rating" min="1" max="5" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Rating</button>
+                </form>
+            {% else %}
+                <p class="card-text">Therapist not found.</p>
+            {% endif %}
+         </div>
+     </div>
+{% endblock %}

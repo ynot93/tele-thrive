@@ -11,6 +11,7 @@ class Therapist(db.Model):
     license_number = db.Column(db.Integer, nullable=False, unique=True)
     
     appointments = db.relationship('Appointment', backref='doctor', lazy=True)
+    ratings = db.relationship('TherapistRating', backref='therapist', lazy=True)
 
     def __repr__(self):
         return f"Therapist('{self.therapist_name}', '{self.email}')"
