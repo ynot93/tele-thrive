@@ -1,5 +1,8 @@
+import os
+import secrets
+from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
-from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm
+from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm, UpdateProfileForm
 from . import app, db, bcrypt
 
 from flask_app.models.appointment import Appointment
@@ -156,8 +159,40 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/user-profile")
+def save_pic(picture):
+    hex_value = secrets.token_hex(8)
+    file_name, ext = os.path.splitext(picture.filename)
+    new_filename = hex_value + ext
+    file_path = os.path.join(app.root_path, 'static/images/profile_pictures', new_filename)
+    
+    pixel_size = (125, 125)
+    img = Image.open(picture)
+    img.thumbnail(pixel_size)
+    img.save(file_path)
+    return new_filename
+    
+
+@app.route("/user-profile", methods=['GET', 'POST'])
 @login_required
 def user_profile():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        if form.prof_pic.data:
+            old_picture = current_user.image_profile
+            if old_picture != 'default.jpg':
+                os.remove(os.path.join(app.root_path,
+                                       'static/images/profile_pictures',
+                                       old_picture))
+            saved_picture = save_pic(form.prof_pic.data)
+            current_user.image_profile = saved_picture
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated', 'success')
+        return redirect(url_for('user_profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
     profile_pic = url_for('static', filename='images/profile_pictures/' + current_user.image_profile)
-    return render_template('user_profile.html', title='User Profile', profile_pic=profile_pic)
+    return render_template('user_profile.html', title='User Profile',
+                           profile_pic=profile_pic, form=form)
