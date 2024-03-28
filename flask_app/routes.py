@@ -1,37 +1,22 @@
-from flask import render_template, url_for, flash, redirect
-from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm
-from . import app
+import os
+import secrets
+from PIL import Image
+from flask import render_template, url_for, flash, redirect, request
+from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm, UpdateProfileForm
+from . import app, db, bcrypt
 
 from flask_app.models.appointment import Appointment
 from flask_app.models.therapist import Therapist
 from flask_app.models.user import User
 from flask import session
-from flask import jsonify, request
 from .id_generator import generate_unique_user_id, generate_unique_therapist_id
-
-
-users = [
-    {
-        'first_name': "Tony",
-        'last_name': "Mputhia",
-        'date_created': "26/02/2024",
-        'appointment': "12/04/2024",
-        'age': 28
-    },
-    {
-        'first_name': "Millyanne",
-        'last_name': "Adhiambo",
-        'date_created': "28/02/2024",
-        'appointment': "17/04/2024",
-        'age': 25
-    }
-]
+from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template("home.html", users=users)
+    return render_template("home.html")
 
 
 @app.route("/about")
@@ -41,26 +26,39 @@ def about():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user_id = generate_unique_user_id()
-        session['user_id'] = user_id
-        flash(f'Account created for {form.username.data}!', 'sucess')
-        return redirect(url_for('home'))
+        # user_id = generate_unique_user_id()
+        # session['user_id'] = user_id
+        # flash(f'Account created for {form.username.data}!', 'sucess')
+        # return redirect(url_for('home'))
+        hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_pwd)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('login'))
     return render_template("register.html", title='Register', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.password == form.password.data:
-            session['user_id'] = user.id
+        # if user and user.password == form.password.data:
+        #     session['user_id'] = user.id
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
             flash(f'You have successfully logged in!', 'success')
-            return redirect(url_for('home'))
+            next_redirect = request.args.get('next')
+            return redirect(next_redirect) if next_redirect else redirect(url_for('home'))
         else:
-            flash(f'Login Unsuccessful! Check username and password', 'danger')
+            flash(f'Login Unsuccessful! Check email or password', 'danger')
     return render_template("login.html", title='Login', form=form)
 
 
@@ -86,13 +84,6 @@ def login_therapist():
         else:
             flash('Login Unsuccessful! Please check email and password', 'danger')
     return render_template('login_therapist.html', title='Therapist Login', form=form)
-
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    flash('You have been logged out!', 'success')
-    return redirect(url_for('home'))
 
 
 #@app.route("/appointments", methods=["GET"])
@@ -158,3 +149,50 @@ def get_appointments():
 @app.route("/appointments/new", methods=["GET"])
 def create_appointment():
     return render_template("create_appointment.html")
+
+@app.route("/logout")
+def logout():
+    # session.clear()
+    # flash('You have been logged out!', 'success')
+    # return redirect(url_for('home'))
+    logout_user()
+    return redirect(url_for('home'))
+
+
+def save_pic(picture):
+    hex_value = secrets.token_hex(8)
+    file_name, ext = os.path.splitext(picture.filename)
+    new_filename = hex_value + ext
+    file_path = os.path.join(app.root_path, 'static/images/profile_pictures', new_filename)
+    
+    pixel_size = (125, 125)
+    img = Image.open(picture)
+    img.thumbnail(pixel_size)
+    img.save(file_path)
+    return new_filename
+    
+
+@app.route("/user-profile", methods=['GET', 'POST'])
+@login_required
+def user_profile():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        if form.prof_pic.data:
+            old_picture = current_user.image_profile
+            if old_picture != 'default.jpg':
+                os.remove(os.path.join(app.root_path,
+                                       'static/images/profile_pictures',
+                                       old_picture))
+            saved_picture = save_pic(form.prof_pic.data)
+            current_user.image_profile = saved_picture
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated', 'success')
+        return redirect(url_for('user_profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    profile_pic = url_for('static', filename='images/profile_pictures/' + current_user.image_profile)
+    return render_template('user_profile.html', title='User Profile',
+                           profile_pic=profile_pic, form=form)
