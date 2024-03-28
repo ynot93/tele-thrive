@@ -8,6 +8,7 @@ from flask_app.models.user import User
 from flask import session
 from flask import jsonify, request
 from .id_generator import generate_unique_user_id, generate_unique_therapist_id
+from flask_app.models.therapist_rating import TherapistRating
 
 
 users = [
@@ -158,3 +159,33 @@ def get_appointments():
 @app.route("/appointments/new", methods=["GET"])
 def create_appointment():
     return render_template("create_appointment.html")
+
+@app.route('/therapists', methods=['GET'])
+def get_therapists():
+    therapists = Therapist.query.filter_by(specialization='filter_value').all()
+    therapist_data = [therapist.serialize() for therapist in therapists]
+    return jsonify(therapist_data)
+
+
+@app.route('/therapists/<therapist_id>/rate', methods=['POST'])
+def rate_therapist(therapist_id):
+    therapist = Therapist.query.get_or_404(therapist_id)
+    rating = request.json.get('rating')
+    therapist_rating = TherapistRating(therapist_id=therapist_id, rating=rating)
+    db.session.add(therapist_rating)
+    db.session.commit()
+    return jsonify({'message': 'Rating submitted successfully'})
+
+
+# Render therapists.html template
+@app.route('/therapists', methods=['GET'])
+def view_therapists():
+    therapists = Therapist.query.all()
+    return render_template('therapists.html', therapists=therapists)
+
+
+# Render rate_therapist.html template
+@app.route('/therapists/<therapist_id>/rate', methods=['GET'])
+def view_rate_therapist(therapist_id):
+    therapist = Therapist.query.get(therapist_id)
+    return render_template('rate_therapist.html', therapist=therapist)

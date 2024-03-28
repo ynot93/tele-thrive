@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container">
+        <h2>List of Therapists</h2>
+        <ul class+"list-group">
+            {% for therapist in therapists %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                         <span>{{ therapist.therapist_name }} - {{ therapist.specialization }}</span>
+                     </div>
+                  </li>
+              {% endfor %}
+           </ul>
+    </div>
+{% endblock %}
