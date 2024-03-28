@@ -169,7 +169,7 @@ def get_therapists():
 
 @app.route('/therapists/<therapist_id>/rate', methods=['POST'])
 def rate_therapist(therapist_id):
-    therapist = Therapist.query.get_or_404(therapist_id)
+    therapist = Therapist.query.get(therapist_id)
     rating = request.json.get('rating')
     therapist_rating = TherapistRating(therapist_id=therapist_id, rating=rating)
     db.session.add(therapist_rating)
