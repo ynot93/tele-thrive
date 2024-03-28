@@ -12,6 +12,7 @@ from flask_app.models.therapist_rating import TherapistRating
 from flask import session
 from .id_generator import generate_unique_user_id, generate_unique_therapist_id
 from flask_login import login_user, current_user, logout_user, login_required
+from flask import jsonify
 
 
 @app.route("/")
@@ -152,7 +153,7 @@ def create_appointment():
     return render_template("create_appointment.html")
 
 
-  @app.route('/therapists', methods=['GET'])
+@app.route('/therapists', methods=['GET'])
 def get_therapists():
     therapists = Therapist.query.filter_by(specialization='filter_value').all()
     therapist_data = [therapist.serialize() for therapist in therapists]
