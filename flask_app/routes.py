@@ -196,3 +196,8 @@ def user_profile():
     profile_pic = url_for('static', filename='images/profile_pictures/' + current_user.image_profile)
     return render_template('user_profile.html', title='User Profile',
                            profile_pic=profile_pic, form=form)
+    
+
+@app.route("/health-analysis-1", methods=['GET', 'POST'])
+def health_analysis():
+    return render_template('health_analysis_1.html', title='Health Analysis')
