@@ -3,7 +3,7 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm, UpdateProfileForm
-from . import app, db, bcrypt
+from . import app, db, bcrypt, health_analysis
 
 from flask_app.models.appointment import Appointment
 from flask_app.models.therapist import Therapist
@@ -200,4 +200,5 @@ def user_profile():
 
 @app.route("/health-analysis-1", methods=['GET', 'POST'])
 def health_analysis():
+    
     return render_template('health_analysis_1.html', title='Health Analysis')

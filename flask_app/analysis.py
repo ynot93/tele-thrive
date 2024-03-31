@@ -1,5 +1,5 @@
 class HealthAnalysis:
-    total_score = 0
+    total_scores = []
     
     def __init__(self, personality_type, anxiety_levels, depression_likelihood):
         self.personality_type = personality_type
