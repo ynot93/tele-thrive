@@ -3,7 +3,8 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, TherapistLoginForm, UpdateProfileForm
-from . import app, db, bcrypt, health_analysis
+from . import app, db, bcrypt
+from flask_app.analysis import get_custom_response
 
 from flask_app.models.appointment import Appointment
 from flask_app.models.therapist import Therapist
@@ -198,7 +199,31 @@ def user_profile():
                            profile_pic=profile_pic, form=form)
     
 
-@app.route("/health-analysis-1", methods=['GET', 'POST'])
-def health_analysis():
+@app.route("/health-analysis", methods=['GET', 'POST'])
+def health_analysis():    
+    if request.method == 'POST':
+        scores = []
+        for i in range(1, 13):
+            response = request.form.get(f"optradio{i}")
+            scores.append(int(response))
+        
+        personality_level = sum(scores[:3]) / 3
+        anxiety_level = sum(scores[5:8]) / 3
+        depression_level = sum(scores[9:]) / 3
+        
+        custom_response = get_custom_response(personality_level,
+                                              anxiety_level,
+                                              depression_level)
     
-    return render_template('health_analysis_1.html', title='Health Analysis')
+        return redirect(url_for('display_results',
+                        response=custom_response))
+
+    return render_template('health_analysis.html',
+                           title='Health Analysis')
+
+
+@app.route("/display-results")
+def display_results():
+    response = request.args.get('response', '')
+    
+    return render_template('results.html', response=response)
