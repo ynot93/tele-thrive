@@ -230,3 +230,17 @@ def user_profile():
     profile_pic = url_for('static', filename='images/profile_pictures/' + current_user.image_profile)
     return render_template('user_profile.html', title='User Profile',
                            profile_pic=profile_pic, form=form)
+
+@app.route("/meeting")
+@login_required
+def meeting():
+    return render_template('meeting.html', username=current_user.username)
+
+
+@app.route("/join", methods=["GET", "POST"])
+@login_required
+def join():
+    if request.method == "POST":
+        room_id = request.form.get("roomID")
+        return redirect(f"/meeting?roomID={room_id}")
+    return render_template('join.html')
