@@ -1,28 +1,28 @@
 def get_custom_response(personality_level, anxiety_level, depression_level):
     # Define thresholds for personality levels
     if personality_level >= 1.5:
-        personality_response = "You have a strong and outgoing personality."
+        personality_response = "You have a strong and outgoing personality, which often shines through in social settings. Your confident demeanor and willingness to engage with others make you a natural leader and someone who is comfortable in various social situations. People are drawn to your charisma and energy, and you have a knack for making others feel at ease in your presence."
     elif personality_level >= 0.5:
-        personality_response = "You have a moderately outgoing personality."
+        personality_response = "You have a moderately outgoing personality, exhibiting a balanced blend of sociability and introspection. While you enjoy social interactions and are capable of engaging with others, you also appreciate moments of solitude and introspection. Your adaptability allows you to thrive in a variety of social environments, where you can contribute meaningfully to conversations while also valuing your personal space and quiet reflection."
     else:
-        personality_response = "You have a reserved personality."
+        personality_response = "You have a reserved personality, characterized by a thoughtful and introspective demeanor. You tend to be more observant and contemplative in social situations, preferring to listen rather than dominate conversations. Your reserved nature does not indicate a lack of confidence but rather a preference for deeper connections and meaningful interactions. While you may not seek out the spotlight, your thoughtful insights and genuine presence make you a valued and trusted friend."
 
     # Define thresholds for anxiety levels
     if anxiety_level >= 1.5:
-        anxiety_response = "You seem to experience high levels of anxiety. It's important to practice relaxation techniques and seek support if needed."
+        anxiety_response = "You seem to experience high levels of anxiety, which can significantly impact your well-being and daily life. It's important to acknowledge these feelings and take proactive steps to manage them. Engaging in relaxation techniques such as deep breathing, mindfulness meditation, or yoga can help alleviate symptoms of anxiety and promote a sense of calm. Additionally, seeking support from a mental health professional or counselor can provide valuable tools and strategies to cope with anxiety effectively. Remember, you are not alone, and there is support available to help you navigate through challenging times."
     elif anxiety_level >= 0.5:
-        anxiety_response = "You experience some anxiety, but it's manageable with coping strategies."
+        anxiety_response = "You experience some anxiety, but it's manageable with coping strategies. Recognizing and acknowledging your feelings is an important first step. By utilizing coping strategies such as deep breathing exercises, mindfulness techniques, or engaging in activities that bring you joy and relaxation, you can effectively manage your anxiety levels. It's also helpful to maintain a healthy lifestyle, including regular exercise, balanced nutrition, and adequate sleep, as these factors can positively impact your overall well-being and resilience to stress. Remember to prioritize self-care and reach out for support if you ever feel overwhelmed or need additional assistance."
     else:
-        anxiety_response = "You seem to have low levels of anxiety."
+        anxiety_response = "You seem to have low levels of anxiety, which is commendable and indicative of your ability to navigate life's challenges with a sense of calm and resilience. It's important to continue practicing healthy habits and self-care routines that contribute to your overall well-being. While occasional feelings of anxiety are normal, your ability to manage stress effectively suggests that you have developed healthy coping mechanisms and a strong support system. Remember to prioritize self-care and maintain open communication with trusted friends, family members, or mental health professionals if you ever experience changes in your emotional well-being."
 
     # Define thresholds for depression levels
     if depression_level >= 1.5:
-        depression_response = "Your responses suggest you may be experiencing symptoms of depression. It's important to reach out to a mental health professional for support."
+        depression_response = "Your responses suggest you may be experiencing symptoms of depression. It's essential to recognize the significance of these feelings and seek support from a mental health professional. Depression is a serious condition that can impact various aspects of your life, including your emotional well-being, relationships, and daily functioning. Speaking with a qualified therapist or counselor can provide valuable insights, coping strategies, and treatment options tailored to your individual needs. Remember, reaching out for help is a courageous step towards healing, and you deserve the support and resources necessary to overcome depression and regain a sense of hope and fulfillment in your life."
     elif depression_level >= 0.5:
-        depression_response = "You're experiencing some symptoms of depression. Taking care of your mental health is important, consider talking to someone about how you're feeling."
+        depression_response = "You're experiencing some symptoms of depression, which can have a significant impact on your overall well-being. It's crucial to prioritize your mental health and take proactive steps to address these symptoms. Consider reaching out to a trusted friend, family member, or mental health professional to discuss how you're feeling openly and honestly. Talking about your emotions can provide relief and support, and connecting with others who understand can help you feel less alone in your journey. Remember, seeking help is a sign of strength, and there are resources and support available to assist you in managing and overcoming depression."
     else:
-        depression_response = "Your responses indicate low levels of depression."
+        depression_response = "Your responses indicate low levels of depression, which is a positive sign for your overall well-being. It's encouraging to see that you're managing your emotions and navigating through life's challenges with resilience and positivity. However, it's essential to continue prioritizing self-care and maintaining healthy habits to support your mental health. Remember to engage in activities that bring you joy, practice mindfulness and relaxation techniques, and cultivate strong connections with supportive friends and family members. By staying attuned to your emotions and seeking support when needed, you can continue to nurture your mental well-being and thrive in your daily life."
 
     # Combine the responses
-    custom_response = f"{personality_response} {anxiety_response} {depression_response}"
+    custom_response = f'{personality_response}\n {anxiety_response}\n {depression_response}'
     return custom_response
