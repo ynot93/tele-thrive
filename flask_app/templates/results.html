@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container my-4 py-4 border rounded">
+    {% if current_user.is_authenticated %}
+        <h1> Here are {{ current_user.username }}'s results</h1>
+    {% else %}
+        <h1> Here are your results</h1>
+    {% endif %}
+    <p>{{ response }}</p>
+    <button type="button" class="btn btn-outline-secondary btn-block"><a href="{{ url_for('user_profile') }}">Book an appointment with a Therapist</a></button>
+</div>
+{% endblock content %}
