@@ -13,6 +13,7 @@ from flask import session
 from .id_generator import generate_unique_user_id, generate_unique_therapist_id
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import jsonify
+from .auth import login_required
 
 
 @app.route("/")
@@ -57,6 +58,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             flash(f'You have successfully logged in!', 'success')
+            session['role'] = 'user'
             next_redirect = request.args.get('next')
             return redirect(next_redirect) if next_redirect else redirect(url_for('home'))
         else:
@@ -68,8 +70,13 @@ def login():
 def register_therapist():
     form = TherapistRegistrationForm()
     if form.validate_on_submit():
-        therapist_id = generate_unique_therapist_id()
-        session['therapist_id'] = therapist_id
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        therapist = Therapist(first_name=form.first_name.data,
+                              last_name=form.last_name.data,
+                              email=form.email.data,
+                              password=hashed_password)
+        db.session.add(therapist)
+        db.session.commit()
         flash(f'Therapist account created for {form.first_name.data} {form.last_name.data}!', 'success')
         return redirect(url_for('home'))
     return render_template("register_therapist.html", title='Therapist Registration', form=form)
@@ -80,8 +87,10 @@ def login_therapist():
     form = TherapistLoginForm()
     if form.validate_on_submit():
         therapist = Therapist.query.filter_by(email=form.email.data).first()
-        if therapist and therapist.check_password(form.password.data):
+        if therapist and bcrypt.check_password_hash(therapist.password, form.password.data):
+            login_user(therapist, remember=form.remember.data)
             flash('You have successfully logged in as a therapist!', 'success')
+            session['role'] = 'therapist'
             return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful! Please check email and password', 'danger')
@@ -207,7 +216,7 @@ def save_pic(picture):
     
 
 @app.route("/user-profile", methods=['GET', 'POST'])
-@login_required
+@login_required(role="ANY")
 def user_profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
@@ -231,16 +240,38 @@ def user_profile():
     return render_template('user_profile.html', title='User Profile',
                            profile_pic=profile_pic, form=form)
 
-@app.route("/meeting")
-@login_required
+@app.route("/meeting", endpoint="meeting_user")
+@login_required(role="ANY")
 def meeting():
+    is_therapist = False
+    if isinstance(current_user, Therapist):
+        is_therapist = True
     return render_template('meeting.html', username=current_user.username)
 
 
-@app.route("/join", methods=["GET", "POST"])
-@login_required
+@app.route("/join", methods=["GET", "POST"], endpoint="join_user")
+@login_required(role="ANY")
 def join():
     if request.method == "POST":
         room_id = request.form.get("roomID")
-        return redirect(f"/meeting?roomID={room_id}")
+        if isinstance(current_user, Therapist):
+            return redirect(f"/therapist/meeting?roomID={room_id}")
+        else:
+            return redirect(f"/meeting?roomID={room_id}")
+    return render_template('join.html')
+
+
+@app.route("/therapist/meeting", endpoint="meeting_therapist")
+@login_required(role="Therapist")
+def therapist_meeting():
+    if isinstance(current_user, Therapist):
+        return render_template('meeting.html', username=current_user.username)
+
+
+@app.route("/therapist/join", methods=["GET", "POST"], endpoint="join_therapist")
+@login_required(role="Therapist")
+def therapist_join():
+    if request.method == "POST":
+        room_id = request.form.get("roomID")
+        return redirect(f"/therapist/meeting?roomID={room_id}")
     return render_template('join.html')
