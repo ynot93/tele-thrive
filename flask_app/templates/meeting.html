@@ -19,11 +19,24 @@
 
 <body>
  <div id="root">
-  <div class="back-to-user-profile">
-    <a href="{{ url_for('user_profile') }}" style="text-decoration: none;">
-       <button>Back to User Profile</button>
+  <div class="back">
+    <a href="{{ url_for('get_appointments') }}" style="text-decoration: none;">
+       <button>Back</button>
     </a>
   </div>
+
+  {% if is_therapist %}
+    <div class="therapist-specific-content">
+        <h3>Welcome, {{ username }}!</h3>
+        <p>This section includes tools and information for therapists.</p>
+    </div>
+  {% else %}
+    <div class="user-specific-content">
+        <h3>Welcome, {{ username }}!</h3>
+        <p>This section includes features and resources for users seeking therapy.</p>
+    </div>
+  {% endif %}
+</div>
 </body>
 <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
 <script>
