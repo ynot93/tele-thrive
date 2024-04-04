@@ -22,12 +22,12 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link active" href="{{ url_for('home') }}">Home</a></li>
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('user_profile') }}">Profile</a></li>
+                        <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a></li>
-                        <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('register_therapist') }}">For Therapists</a></li>
+                        <li class="nav-item"><a class="nav-item nav-link" href="{{ url_for('for_therapist') }}">For Therapists</a></li>
                     {% endif %}
                 </ul>
             </div>
