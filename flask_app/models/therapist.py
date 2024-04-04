@@ -16,6 +16,7 @@ class Therapist(db.Model, UserMixin):
     # role = db.Column(db.String(80), default='Therapist')
     
     appointments = db.relationship('Appointment', backref='doctor', lazy=True)
+    ratings = db.relationship('TherapistRating', backref='therapist', lazy=True)
 
     def __repr__(self):
         return f"Therapist('{self.username}', '{self.email}', '{self.license_number}')"

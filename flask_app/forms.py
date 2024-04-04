@@ -66,12 +66,6 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Log In')
 
-# class TherapistLoginForm(FlaskForm):
-#     email = StringField('Email', validators=[DataRequired(), Email()])
-#     password = PasswordField('Password', validators=[DataRequired()])
-#     remember = BooleanField('Remember Me')
-#     submit = SubmitField('Login')
-
 
 class UpdateProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
