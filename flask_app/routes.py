@@ -240,17 +240,14 @@ def user_profile():
     return render_template('user_profile.html', title='User Profile',
                            profile_pic=profile_pic, form=form)
 
-@app.route("/meeting", endpoint="meeting_user")
-@login_required(role="ANY")
+@app.route("/meeting")
+@login_required
 def meeting():
-    is_therapist = False
-    if isinstance(current_user, Therapist):
-        is_therapist = True
     return render_template('meeting.html', username=current_user.username)
 
 
-@app.route("/join", methods=["GET", "POST"], endpoint="join_user")
-@login_required(role="ANY")
+@app.route("/join", methods=["GET", "POST"])
+@login_required
 def join():
     if request.method == "POST":
         room_id = request.form.get("roomID")
@@ -261,15 +258,15 @@ def join():
     return render_template('join.html')
 
 
-@app.route("/therapist/meeting", endpoint="meeting_therapist")
-@login_required(role="Therapist")
+@app.route("/therapist/meeting")
+@login_required
 def therapist_meeting():
     if isinstance(current_user, Therapist):
         return render_template('meeting.html', username=current_user.username)
 
 
-@app.route("/therapist/join", methods=["GET", "POST"], endpoint="join_therapist")
-@login_required(role="Therapist")
+@app.route("/therapist/join", methods=["GET", "POST"])
+@login_required
 def therapist_join():
     if request.method == "POST":
         room_id = request.form.get("roomID")
