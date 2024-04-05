@@ -248,3 +248,33 @@ def display_results():
     response = session.get('custom_response')
     
     return render_template('results.html', response=response)
+
+@app.route("/meeting")
+@login_required
+def meeting():
+    return render_template('meeting.html', username=current_user.username)
+
+@app.route("/join", methods=["GET", "POST"])
+@login_required
+def join():
+    if request.method == "POST":
+        room_id = request.form.get("roomID")
+        if isinstance(current_user, Therapist):
+            return redirect(f"/therapist/meeting?roomID={room_id}")
+        else:
+            return redirect(f"/meeting?roomID={room_id}")
+        return render_template('join.html')
+
+@app.route("/therapist/meeting")
+@login_required
+def therapist_meeting():
+    if isinstance(current_user, Therapist):
+        return render_template('meeting.html', username=current_user.username)
+
+@app.route("/therapist/join", methods=["GET", "POST"])
+@login_required
+def therapist_join():
+    if request.method == "POST":
+        room_id = request.form.get("roomID")
+        return redirect(f"/therapist/meeting?roomID={room_id}")
+    return render_template('join.html')
