@@ -13,7 +13,6 @@ from flask import session
 from .id_generator import generate_unique_user_id, generate_unique_therapist_id
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import jsonify
-from .auth import login_required
 
 
 @app.route("/")
