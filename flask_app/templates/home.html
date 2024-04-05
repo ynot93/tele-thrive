@@ -71,17 +71,24 @@
 <!-- Get Started -->
 <section class="container py-6">
     <div class="get-started ">
+        
         <div class="option individual">
-            <h2>Individual Therapy</h2>
-            <p>Explore personalized therapy sessions tailored to your needs.</p>
+            <a href="{{ url_for('health_analysis') }}">
+                <h2>Individual Therapy</h2>
+                <p>Explore personalized therapy sessions tailored to your needs.</p>
+            </a>
         </div>
         <div class="option teen">
-            <h2>Teen Therapy</h2>
-            <p>Specialized support and guidance for adolescents facing challenges.</p>
+            <a href="{{ url_for('health_analysis') }}">
+                <h2>Teen Therapy</h2>
+                <p>Specialized support and guidance for adolescents facing challenges.</p>
+            </a>
         </div>
         <div class="option couple">
-            <h2>Couple's Therapy</h2>
-            <p>Strengthen your relationship and improve communication with couples therapy.</p>
+            <a href="{{ url_for('health_analysis') }}">
+                <h2>Couple's Therapy</h2>
+                <p>Strengthen your relationship and improve communication with couples therapy.</p>
+            </a>
         </div>
     </div>
 </section>

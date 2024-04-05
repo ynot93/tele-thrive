@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h2>Join the Future of Therapy: Apply now with TeleThrive!</h2>
+    <div class="job-description mx-4">
+        <p>We are looking for experienced therapists who are passionate about helping people improve their mental well-being. As a therapist on TeleThrive, you will have the opportunity to connect with clients remotely and provide counseling and support through our secure platform.</p>
+        <p>Key responsibilities include:</p>
+        <ul>
+            <li>Conducting therapy sessions via video calls</li>
+            <li>Developing treatments tailored to individual client needs</li>
+            <li>Providing support and guidance to clients facing mental health challenges</li>
+        </ul>
+    </div>
+    <div class="how-we-work mx-4">
+        <p>At TeleThrive, we strive to make mental health care accessible and convenient for everyone. Our platform connects clients with qualified therapists, allowing them to receive professional support from the comfort of their own homes.</p>
+        <p>Here's how our platform woks:</p>
+        <ol>
+            <li>Clients create an account and complete a brief assessment to match them with the most suitable therapist.</li>
+            <li>Therapists conduct sessions with clients via video calls, providing counseling and guidance tailored to their needs.</li>
+            <li>Both clients and therapists have  tools and resources to facilitate effective communication and treatment.</li>
+        </ol>
+    </div>
+    <div class="container">
+        <h3 class="mb-2">
+            <a href="{{ url_for('register_therapist') }}">
+                <button class="btn btn-secondary btn-block" type="button">Register as a Therapist Now!</button>
+            </a>
+        </h3>
+    </div>
+</div>
+{% endblock %}
