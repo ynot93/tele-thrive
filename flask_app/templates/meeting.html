@@ -1,15 +1,14 @@
 <html>
-
 <head>
   <title>Meetings</title>
   <style>
       body {
-          background-color: #333;
-          margin: 0;
-          padding: 0:
-      }
+        background-color: #333;
+        margin: 0;
+        padding: 0:
+       }
 
-    #root {
+     #root {
      width: 100vw;
      height: 100vh;
      }
@@ -21,20 +20,20 @@
  <div id="root">
   <div class="back">
     <a href="{{ url_for('get_appointments') }}" style="text-decoration: none;">
-       <button>Back</button>
-    </a>
-  </div>
+        <button>Back</button>
+     </a>
+   </div>
 
-  {% if is_therapist %}
-    <div class="therapist-specific-content">
-        <h3>Welcome, {{ username }}!</h3>
-        <p>This section includes tools and information for therapists.</p>
-    </div>
-  {% else %}
-    <div class="user-specific-content">
-        <h3>Welcome, {{ username }}!</h3>
-        <p>This section includes features and resources for users seeking therapy.</p>
-    </div>
+   {% if is_therapist %}
+     <div class="therapist-specific-content">
+         <h3>Welcome, {{ username }}!</h3>
+         <p>This section includes tools and information for therapists.</p>
+     </div>
+   {% else %}
+     <div class="user-specific-content">
+         <h3>Welcome, {{ username }}!</h3>
+         <p>This section includes features and resources for users seeking therapy.</p>
+     </div>
   {% endif %}
 </div>
 </body>
@@ -62,31 +61,31 @@ window.onload = function () {
     const serverSecret = "f3e0bb99847a4175a5753b102854a152";
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
 
-                
-        const zp = ZegoUIKitPrebuilt.create(kitToken);
-        zp.joinRoom({
-            container: document.querySelector("#root"),
-            sharedLinks: [{
-                name: 'Personal link',
-                url: window.location.protocol + '//' + window.location.host  + window.location.pathname + '?roomID=' + roomID,
-            }],
-            scenario: {
-                mode: ZegoUIKitPrebuilt.VideoConference,
-            },
-                                        
-                turnOnMicrophoneWhenJoining: true,
-                turnOnCameraWhenJoining: true,
-                showMyCameraToggleButton: true,
-                showMyMicrophoneToggleButton: true,
-                showAudioVideoSettingsButton: true,
-                showScreenSharingButton: true,
-                showTextChat: true,
-                showUserList: true,
-                maxUsers: 2,
-                layout: "Auto",
-                showLayoutButton: false,
-                                 
-            });
+
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+    zp.joinRoom({
+        container: document.querySelector("#root"),
+        sharedLinks: [{
+            name: 'Personal link',
+            url: window.location.protocol + '//' + window.location.host  + window.location.pathname + '?roomID=' + roomID,
+        }],
+        scenario: {
+            mode: ZegoUIKitPrebuilt.VideoConference,
+        },
+
+            turnOnMicrophoneWhenJoining: true,
+            turnOnCameraWhenJoining: true,
+            showMyCameraToggleButton: true,
+            showMyMicrophoneToggleButton: true,
+            showAudioVideoSettingsButton: true,
+            showScreenSharingButton: true,
+            showTextChat: true,
+            showUserList: true,
+            maxUsers: 2,
+            layout: "Auto",
+            showLayoutButton: false,
+
+        });
 }
 </script>
 
