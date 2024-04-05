@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_nav == 'profile' %}active{% endif %}" href="#">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_nav == 'therapists' %}active{% endif %}" href="#">Therapists</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_nav == 'appointments' %}active{% endif %}" href="#">Appointments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_nav == 'chat' %}active{% endif %}" href="#">Chat with Others</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_nav == 'logout' %}active{% endif %}" href="#">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <div id="main-content" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">{% block title %}Dashboard{% endblock %}</h1>
+                </div>
+                <div class="selected-area">
+                    {% block dashboard %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
