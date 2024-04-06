@@ -9,6 +9,7 @@ from flask_app.models.appointment import Appointment
 from flask_app.models.therapist import Therapist
 from flask_app.models.user import User
 from flask_app.models.therapist_rating import TherapistRating
+from flask_app.models.post import Post
 from flask import session
 # from .id_generator import generate_unique_user_id, generate_unique_therapist_id
 from flask_login import login_user, current_user, logout_user, login_required
@@ -282,3 +283,27 @@ def therapist_join():
         room_id = request.form.get("roomID")
         return redirect(f"/therapist/meeting?roomID={room_id}")
     return render_template('join.html')
+
+
+@app.route('/posts', methods=['GET'])
+def view_posts():
+    # Retrieve all posts from the database
+    posts = Post.query.all()
+    # Serialize the posts into JSON format
+    serialized_posts = [{'id': post.id, 'content': post.content, 'author': post.author.username} for post in posts]
+    return jsonify(serialized_posts)
+
+
+@app.route('/posts', methods=['POST'])
+@login_required
+def create_post():
+    content = request.json.get('content')
+    if not content:
+        return jsonify({'error': 'Content is required'}), 400
+
+    # Create a new post
+    new_post = Post(content=content, author=current_user)
+    db.session.add(new_post)
+    db.session.commit()
+
+    return jsonify({'message': 'Post created successfully', 'id': new_post.id}), 201
