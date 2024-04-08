@@ -35,7 +35,8 @@ body {
   text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
 }
 
-.layout-container {
+.layout-container,
+.main {
   position: relative;
   min-height: 100%;
 }
@@ -142,11 +143,12 @@ body {
 
 /* Profile Section */
 .content-section {
-  background: #747474;
+  /* background: #747474; */
   padding: 10px 20px;
   border: 1px solid #dddddd;
-  border-radius: 3px;
+  border-radius: 2px;
   margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 .account-img {
@@ -162,14 +164,31 @@ body {
 
 /* Dashboard Section */
 /* Style for active navigation links */
-.nav-link.active {
-  color: #f4d26ae2 !important;
+.side-nav {
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  padding-top: 20px;
 }
 
-/* Style for selected area */
-.selected-area {
-  border: 1px solid #f4d26ae2;
-  border-radius: 10px;
-  padding: 10px;
+.nav-link.active {
+  background-color: #f4d26ae2 !important;
+}
+
+.sidebar-sticky {
+  min-height: 100vh;
+}
+
+/* Display Therapists */
+.list-group-item,
+.card {
+  background-color: #696969;
+}
+
+/* Display Appointments */
+.appointment-card {
   margin-bottom: 20px;
 }
+/* .appointment-details {
+  font-weight: bold;
+} */

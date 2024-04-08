@@ -2,7 +2,7 @@ import os
 import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
-from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, UpdateProfileForm, UpdateTherapistProfileForm
+from .forms import RegistrationForm, LoginForm, TherapistRegistrationForm, UpdateProfileForm, UpdateTherapistProfileForm, AppointmentForm
 from . import app, db, bcrypt
 from flask_app.analysis import get_custom_response
 from flask_app.models.appointment import Appointment
@@ -19,17 +19,19 @@ from flask import jsonify
 @app.route("/")
 @app.route("/home")
 def home():
-    print(current_user)
-    return render_template("home.html")
+    active_nav = 'home'
+    return render_template("home.html", active_nav=active_nav)
 
 
 @app.route("/about")
 def about():
-    return render_template("about.html", title='About')
+    active_nav = 'about'
+    return render_template("about.html", title='About', active_nav=active_nav)
 
 @app.route("/for-therapist")
 def for_therapist():
-    return render_template("for_therapist.html", title='For Therapist')
+    active_nav = 'for_therapist'
+    return render_template("for_therapist.html", title='For Therapist', active_nav=active_nav)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -97,19 +99,45 @@ def register_therapist():
     return render_template("register_therapist.html", title='Therapist Registration', form=form)
 
 
-@app.route("/appointments", methods=["GET"])
-def get_appointments():
-    user_id = session.get("user_id")
-    if not user_id:
-        flash("Please log in to view your appointments.", "danger")
-        return redirect(url_for("login"))
-    appointments = Appointment.query.filter_by(user_id=user_id).all()
-    return render_template("appointments.html", appointments=appointments)
+@app.route("/dashboard/appointments", methods=["GET", "POST"])
+@login_required
+def appointments():
+    active_nav = 'appointments'
+    active_nav_db = 'dashboard'
+    
+    user_type = "user" if isinstance(current_user, User) else "therapist"
+    
+    appointments = Appointment.query.filter(Appointment.user_id == current_user.id).all()
+    therapist_appointments = Appointment.query.filter(Appointment.therapist_id == current_user.id).all()
+    
+    form = AppointmentForm()
+    
+    form.therapist.choices = [(therapist.id, f'{therapist.first_name} {therapist.last_name}') for therapist in Therapist.query.all()]
+    form.user.choices = [(user.id, f'{user.username}') for user in User.query.all()]
 
+    
+    if not form.therapist.choices:
+        flash('No Therapists are available yet', 'danger')
+    
+    if request.method == "POST" and form.validate_on_submit():
+        new_appointment = Appointment(
+            user_id=current_user.id,
+            therapist_id=form.therapist.data,
+            date=form.date.data,
+            time=form.time.data,
+            description=form.description.data)
+        db.session.add(new_appointment)
+        db.session.commit()
+        flash('Appointment created successfully!', 'success')
+        return redirect(url_for('appointments'))
 
-@app.route("/appointments/new", methods=["GET"])
-def create_appointment():
-    return render_template("create_appointment.html")
+    return render_template("appointments.html",
+                           form=form,
+                           active_nav=active_nav,
+                           active_nav_db=active_nav_db,
+                           appointments=appointments,
+                           therapist_appointments=therapist_appointments,
+                           user_type=user_type)
 
 
 @app.route('/therapists', methods=['GET'])
@@ -130,10 +158,12 @@ def rate_therapist(therapist_id):
 
 
 # Render therapists.html template
-@app.route('/therapists', methods=['GET'])
+@app.route('/dashboard/therapists', methods=['GET'])
 def view_therapists():
+    active_nav = 'therapists'
+    active_nav_db = 'dashboard'
     therapists = Therapist.query.all()
-    return render_template('therapists.html', therapists=therapists)
+    return render_template('therapists.html', therapists=therapists, active_nav=active_nav, active_nav_db=active_nav_db)
 
 
 # Render rate_therapist.html template
@@ -163,9 +193,12 @@ def save_pic(picture):
     
 
 @app.route("/dashboard", methods=['GET', 'POST'])
+@app.route("/dashboard/profile", methods=['GET', 'POST'])
 @login_required
 def dashboard():
     print(current_user)
+    active_nav = 'profile'
+    active_nav_db = 'dashboard'
     if isinstance(current_user, User):
         form = UpdateProfileForm()
         if form.validate_on_submit():
@@ -187,7 +220,7 @@ def dashboard():
             form.email.data = current_user.email
         profile_pic = url_for('static', filename='images/profile_pictures/' + current_user.image_profile)
         return render_template('user_dashboard.html', title='User Profile',
-                            profile_pic=profile_pic, form=form)
+                            profile_pic=profile_pic, form=form, active_nav=active_nav, active_nav_db=active_nav_db)
     elif isinstance(current_user, Therapist):
         form = UpdateTherapistProfileForm()
         if form.validate_on_submit():
@@ -212,10 +245,13 @@ def dashboard():
             form.email.data = current_user.email
         profile_pic = url_for('static', filename='images/profile_pictures/' + current_user.image_profile)
         return render_template('therapist_dashboard.html', title='User Profile',
-                            profile_pic=profile_pic, form=form)
+                            profile_pic=profile_pic, form=form, active_nav=active_nav, active_nav_db=active_nav_db)
     else:
         return redirect(url_for('home'))
-    
+
+# @app.route("/dashboard/profile", methods=['GET', 'POST'])
+# @login_required
+# def dashboard_profile():
 
 @app.route("/health-analysis", methods=['GET', 'POST'])
 def health_analysis():    
@@ -286,12 +322,13 @@ def therapist_join():
 
 
 @app.route('/posts', methods=['GET'])
-def view_posts():
+@login_required
+def posts():
     # Retrieve all posts from the database
     posts = Post.query.all()
     # Serialize the posts into JSON format
     serialized_posts = [{'id': post.id, 'content': post.content, 'author': post.author.username} for post in posts]
-    return jsonify(serialized_posts)
+    return render_template('posts.html')
 
 
 @app.route('/posts', methods=['POST'])

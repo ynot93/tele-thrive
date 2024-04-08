@@ -40,7 +40,7 @@
                                 {% endfor %}
                             </div>
                             {% else %}
-                            {{ form.email(class="form-control form-control-large") }}
+                                {{ form.email(class="form-control form-control-large") }}
                             {% endif %}
                         </div>
                         <div class="form-group">
@@ -48,9 +48,9 @@
                             {{ form.prof_pic(class="form-control-file") }}
 
                             {% if form.prof_pic.errors %}
-                            {% for error in form.prof_pic.errors %}
-                            <span class="text-danger">{{ error }}</span></br>
-                            {% endfor %}
+                                {% for error in form.prof_pic.errors %}
+                                <span class="text-danger">{{ error }}</span></br>
+                                {% endfor %}
                             {% endif %}
                         </div>
                     </fieldset>
