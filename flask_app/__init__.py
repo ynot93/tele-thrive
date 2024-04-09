@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_manager
+# from random import randint 
 
 
 load_dotenv()
@@ -28,11 +29,11 @@ from flask_app.models.therapist import Therapist
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(uuid):
     # Dispatch user loading based on user type
     user_types = [User, Therapist]
     for user_type in user_types:
-        user = user_type.query.get(int(user_id))
+        user = user_type.query.get(int(uuid))
         if user:
             return user
     return None
