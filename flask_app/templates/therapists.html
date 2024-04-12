@@ -1,0 +1,21 @@
+{% extends "layout_dashboard.html" %}
+{% block dashboard %}
+    <h4>List of Therapists</h4>
+    <ul class="list-group">
+        {% if therapists %}
+            {% for therapist in therapists %}
+                <li class="list-group-item w-75 mb-3">
+                    <div class="d-flex media">
+                        <img class="rounded-circle account-img" src="{{ url_for('static', filename='images/profile_pictures/' + therapist.image_profile) }}">
+                        <div class="media-body">
+                            <h3 class="account-heading">{{ therapist.first_name }} {{ therapist.last_name }}</h3>
+                            <p>{{ therapist.email }}</p>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p>There are no available therapists</p>
+        {% endif %}
+    </ul>
+{% endblock dashboard %}

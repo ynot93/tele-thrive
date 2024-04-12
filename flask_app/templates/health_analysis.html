@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container my-4">
+    <form action="/health-analysis" method="post">
+        {% macro question_sequence(question, question_number) %}
+        <div class="container border border-secondary rounded py-4 my-4">
+            <h4>{{ question }}</h4>
+            <div class="container">
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio{{ question_number }}"
+                            value="2">Strongly Agree
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio{{ question_number }}"
+                            value="1">Agree
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio{{ question_number }}"
+                            value="0">Neutral
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio{{ question_number }}"
+                            value="-1">Disagree
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio{{ question_number }}"
+                            value="-2">Strongly Disagree
+                    </label>
+                </div>
+            </div>
+        </div>
+        {% endmacro %}
+
+        {{ question_sequence("I enjoy meeting new people and making new friends.", 1) }}
+        {{ question_sequence("I prefer trying new things rather than sticking to a routine.", 2) }}
+        {{ question_sequence("I tend to be outgoing and assertive in social situations.", 3) }}
+        {{ question_sequence("I often find myself lost in my own thoughts and imagination.", 4) }}
+        {{ question_sequence("I am organized and prefer planning ahead rather than being spontaneous.", 5) }}
+        {{ question_sequence("I frequently feel nervous or anxious without any specific reason.", 6) }}
+        {{ question_sequence("I experience physical symptoms like racing heart or sweating when faced with stressors.", 7) }}
+        {{ question_sequence("I often worry excessively about future events or outcomes.", 8) }}
+        {{ question_sequence("I find it difficult to relax or unwind even when there's no immediate stressor.", 9) }}
+        {{ question_sequence("I frequently feel sad or down for no apparent reason.", 10) }}
+        {{ question_sequence("I have lost interest in activities or hobbies that used to bring me joy.", 11) }}
+        {{ question_sequence("I have trouble concentrating or making decisions due to a lack of motivation.", 12) }}
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <br>
+        <br>
+        <br>
+        <br>
+    </form>
+</div>
+{% endblock content %}

@@ -1,7 +1,0 @@
-{% extends "layout.html" %}
-{% block content %}
-{% for user in users %}
-    <h1>{{ user.first_name }}</h1>
-    <p>Has 2 appointments on {{ user.appointment }}</p>
-{% endfor %}
-{% endblock content %}

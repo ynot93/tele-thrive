@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="side-nav border-right border-top border-bottom rounded">
+                <nav class="col-md-2 d-none d-md-block sidebar fixed-left">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link {% if active_nav == 'profile' %}active{% endif %}" href="{{ url_for('dashboard') }}">Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if active_nav == 'therapists' %}active{% endif %}" href="{{ url_for('view_therapists') }}">Therapists</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if active_nav == 'appointments' %}active{% endif %}" href="{{ url_for('appointments') }}">Appointments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if active_nav == 'chat' %}active{% endif %}" href="{{ url_for('posts') }}">Chat</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if active_nav == 'logout' %}active{% endif %}" href="{{ url_for('logout') }}">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main content -->
+            <div id="main-content" class="col-md-9 ml-sm-auto col-lg-10">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="">
+                    {% block dashboard %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

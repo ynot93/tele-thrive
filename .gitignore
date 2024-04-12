@@ -22,3 +22,9 @@ database.db
 # Ignore logs and temporary files
 *.log
 *.tmp
+
+# Ignore sqlite instance
+instance/
+
+# Ignoree
+.DS_Store

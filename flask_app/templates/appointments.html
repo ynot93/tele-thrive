@@ -1,0 +1,119 @@
+{% extends "layout_dashboard.html" %}
+{% block dashboard %}
+    <div class="content-section w-75">
+        <h2>Upcoming Appointments</h2>
+        {% if user_type == 'user' %}
+            {% if appointments %}
+                {% for appointment in appointments %}
+                <div class="card appointment-card">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ appointment.description }}</h4>
+                        <p class="card-text appointment-details">Date: {{ appointment.date }}</p>
+                        <p class="card-text appointment-details">Time: {{ appointment.time }}</p>
+                        <p class="card-text appointment-details">Therapist Name: Dr. {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</p>
+                        <a href="{{ url_for('dashboard') }}"><p class="card-text appointment-details">Client Name: {{ appointment.client.username }}</p></a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No upcoming appointments found.</p>
+            {% endif %}
+        {% elif user_type == 'therapist' %}
+            {% if therapist_appointments %}
+                {% for appointment in therapist_appointments %}
+                <div class="card appointment-card">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ appointment.description }}</h4>
+                        <p class="card-text appointment-details">Date: {{ appointment.date }}</p>
+                        <p class="card-text appointment-details">Time: {{ appointment.time }}</p>
+                        <p class="card-text appointment-details">Therapist Name: Dr. {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</p>
+                        <a href="{{ url_for('dashboard') }}"><p class="card-text appointment-details">Client Name: {{ appointment.client.username }}</p></a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No upcoming appointments found.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="content-section w-75">
+        <h2>Schedule New Appointment</h2>
+        <form method="POST" action="{{ url_for('appointments') }}" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.date.label(class="form-control-label") }}
+
+                {% if form.date.errors %}
+                    {{ form.date(class="is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.date.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.date }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.time.label(class="form-control-label") }}
+                
+                {% if form.time.errors %}
+                    {{ form.time(class="is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.time.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.time }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.description.label(class="form-control-label") }} <br>
+                
+                {% if form.description.errors %}
+                    {{ form.description(class="is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.description.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.description }}
+                {% endif %}
+            </div>
+            {% if user_type == 'user' %}
+                <div class="form-group">
+                    {{ form.therapist.label(class="form-control-label") }} <br>
+                    
+                    {% if form.therapist.errors %}
+                        {{ form.therapist(class="is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.therapist.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.therapist }}
+                    {% endif %}
+                </div>
+            {% elif user_type == 'therapist' %}
+            <div class="form-group">
+                {{ form.user.label(class="form-control-label") }} <br>
+                
+                {% if form.user.errors %}
+                    {{ form.user(class="is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.user.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.user }}
+                {% endif %}
+            </div>
+            {% endif %}
+            <button type="submit" class="btn btn-outline-info">Schedule Appointment</button>
+        </form>
+    </div>
+{% endblock dashboard %}
