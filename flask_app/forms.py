@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_security import current_user
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, DateField, TimeField, TextAreaField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, Optional
 from flask_app.models.user import User
 from flask_app.models.therapist import Therapist
 
@@ -114,10 +114,10 @@ class AppointmentForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()])
     time = TimeField('Time', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()], render_kw={"rows": 5, "cols": 50})
-    therapist = SelectField('Therapist', coerce=int, validators=[DataRequired()], render_kw={"rows": 5})
-    user = SelectField('Client', coerce=int, validators=[DataRequired()], render_kw={"rows": 5})
+    therapist = SelectField('Therapist', coerce=int, validators=[Optional()], render_kw={"rows": 5})
+    user = SelectField('Client', coerce=int, validators=[Optional()], render_kw={"rows": 5})
 
-    submit = SubmitField('Create Appointment')
+    submit = SubmitField('Schedule Appointment')
     
     def validate_date(self, date):
         if date.data < datetime.now().date():

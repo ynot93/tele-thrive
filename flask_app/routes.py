@@ -11,7 +11,6 @@ from flask_app.models.user import User
 from flask_app.models.therapist_rating import TherapistRating
 from flask_app.models.post import Post
 from flask import session
-# from .id_generator import generate_unique_user_id, generate_unique_therapist_id
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import jsonify
 
@@ -20,6 +19,7 @@ from flask import jsonify
 @app.route("/home")
 def home():
     active_nav = 'home'
+    print(current_user)
     return render_template("home.html", active_nav=active_nav)
 
 
@@ -114,23 +114,30 @@ def appointments():
     
     form.therapist.choices = [(therapist.id, f'{therapist.first_name} {therapist.last_name}') for therapist in Therapist.query.all()]
     form.user.choices = [(user.id, f'{user.username}') for user in User.query.all()]
-
     
     if not form.therapist.choices:
-        flash('No Therapists are available yet', 'danger')
-    
-    if request.method == "POST" and form.validate_on_submit():
+            flash('No Therapists are available yet', 'danger')
+        
+    if user_type == "user" and form.validate_on_submit():
         new_appointment = Appointment(
             user_id=current_user.id,
             therapist_id=form.therapist.data,
             date=form.date.data,
             time=form.time.data,
             description=form.description.data)
+            
+    elif user_type == 'therapist' and form.validate_on_submit():
+        new_appointment = Appointment(
+            therapist_id=current_user.id,
+            user_id=form.user.data,
+            date=form.date.data,
+            time=form.time.data,
+            description=form.description.data)
+            
         db.session.add(new_appointment)
         db.session.commit()
         flash('Appointment created successfully!', 'success')
         return redirect(url_for('appointments'))
-
     return render_template("appointments.html",
                            form=form,
                            active_nav=active_nav,
@@ -138,6 +145,51 @@ def appointments():
                            appointments=appointments,
                            therapist_appointments=therapist_appointments,
                            user_type=user_type)
+
+
+@app.route("/dashboard/appointments/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_appointment(id):
+    active_nav = 'appointments'
+    active_nav_db = 'dashboard'
+    
+    user_type = "user" if isinstance(current_user, User) else "therapist"
+    
+    appointment = Appointment.query.get_or_404(id)
+    form = AppointmentForm(obj=appointment)
+    
+    form.therapist.choices = [(therapist.id, f'{therapist.first_name} {therapist.last_name}') for therapist in Therapist.query.all()]
+    form.user.choices = [(user.id, f'{user.username}') for user in User.query.all()]
+    
+    if form.validate_on_submit():
+        form.populate_obj(appointment)
+        db.session.commit()
+        flash('Appointment updated successfully!', 'success')
+        return redirect(url_for('appointments'))
+    elif request.method == 'GET':
+        form.date.data = appointment.date
+        form.time.data = appointment.time
+        form.description.data = appointment.description
+        if current_user == 'user':
+            form.therapist.data = appointment.therapist_id
+        elif current_user == 'therapist':
+            form.user.data = appointment.user_id
+    return render_template('edit_appointment.html',
+                           form=form,
+                           active_nav=active_nav,
+                           active_nav_db=active_nav_db,
+                           appointment=appointment,
+                           user_type=user_type)
+
+
+@app.route("/dashboard/appointments/delete/<int:id>", methods=["POST"])
+@login_required
+def delete_appointment(id):
+    appointment = Appointment.query.get_or_404(id)
+    db.session.delete(appointment)
+    db.session.commit()
+    flash('Appointment deleted successfully!', 'success')
+    return redirect(url_for('appointments'))
 
 
 @app.route('/therapists', methods=['GET'])
@@ -214,7 +266,7 @@ def dashboard():
             current_user.email = form.email.data
             db.session.commit()
             flash('Your account has been updated', 'success')
-            return redirect(url_for('user_profile'))
+            return redirect(url_for('dashboard'))
         elif request.method == 'GET':
             form.username.data = current_user.username
             form.email.data = current_user.email
@@ -234,10 +286,11 @@ def dashboard():
                 current_user.image_profile = saved_picture
             current_user.first_name = form.first_name.data
             current_user.last_name = form.last_name.data
+            current_user.username = form.username.data
             current_user.email = form.email.data
             db.session.commit()
             flash('Your account has been updated', 'success')
-            return redirect(url_for('therapist_profile'))
+            return redirect(url_for('dashboard'))
         elif request.method == 'GET':
             form.first_name.data = current_user.first_name
             form.last_name.data = current_user.last_name
@@ -249,9 +302,6 @@ def dashboard():
     else:
         return redirect(url_for('home'))
 
-# @app.route("/dashboard/profile", methods=['GET', 'POST'])
-# @login_required
-# def dashboard_profile():
 
 @app.route("/health-analysis", methods=['GET', 'POST'])
 def health_analysis():    
