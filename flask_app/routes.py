@@ -13,6 +13,7 @@ from flask_app.models.post import Post
 from flask import session
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import jsonify
+import uuid
 
 
 @app.route("/")
@@ -165,7 +166,9 @@ def appointments():
             therapist_id=form.therapist.data,
             date=form.date.data,
             time=form.time.data,
-            description=form.description.data)
+            description=form.description.data,
+            meeting_url=str(uuid.uuid4())
+        )
         
         db.session.add(new_appointment)
         db.session.commit()
@@ -178,7 +181,9 @@ def appointments():
             user_id=form.user.data,
             date=form.date.data,
             time=form.time.data,
-            description=form.description.data)
+            description=form.description.data,
+            meeting_url=str(uuid.uuid4())
+        )
             
         db.session.add(new_appointment)
         db.session.commit()
@@ -448,7 +453,7 @@ def display_results():
   
 @app.route("/meeting")
 @login_required
-def meeting():
+def existing_meeting():
     """
     Render the meeting page.
     """
@@ -491,6 +496,16 @@ def therapist_join():
         room_id = request.form.get("roomID")
         return redirect(f"/therapist/meeting?roomID={room_id}")
     return render_template('join.html')
+
+
+@app.route("/meeting/<meeting_id>")
+@login_required
+def meeting(meeting_id):
+    """
+    Render the meeting page.
+    """
+    appointment = Appointment.query.filter_by(meeting_url=meeting_id).first_or_404()
+    return render_template('meeting.html', appointment=appointment, username=current_user.username)
 
 
 @app.route('/posts', methods=['GET'])

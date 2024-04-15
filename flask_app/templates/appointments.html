@@ -53,6 +53,11 @@
                     <a href="{{ url_for('dashboard') }}">
                         <p class="card-text appointment-details">Client Name: {{ appointment.client.username }}</p>
                     </a>
+                    <br>
+                    <!-- Display Meeting URL -->
+                    {% if appointment.meeting_url %}
+                    <p class="card-text appointment-details">Meeting URL: <a href="{{ url_for('meeting', meeting_id=appointment.meeting_url) }}">{{ appointment.meeting_url }}</a></p>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -110,6 +115,10 @@
                     <a href="{{ url_for('dashboard') }}">
                         <p class="card-text appointment-details">Client Name: {{ appointment.client.username }}</p>
                     </a>
+                    <!-- Display Meeting URL -->
+                    {% if appointment.meeting_url %}
+                    <p class="card-text appointment-details">Meeting URL: <a href="{{ url_for('meeting', meeting_id=appointment.meeting_url) }}">{{ appointment.meeting_url }}</a></p>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

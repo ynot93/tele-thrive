@@ -20,6 +20,7 @@ class Appointment(db.Model):
     description = db.Column(db.String(200), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     therapist_id = db.Column(db.Integer, db.ForeignKey('therapist.id'), nullable=False)
+    meeting_url = db.Column(db.String(255))
 
     def __repr__(self):
         """
