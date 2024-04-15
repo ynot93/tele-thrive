@@ -18,7 +18,6 @@ class Appointment(db.Model):
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
     description = db.Column(db.String(200), nullable=False)
-    
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     therapist_id = db.Column(db.Integer, db.ForeignKey('therapist.id'), nullable=False)
 
@@ -29,4 +28,4 @@ class Appointment(db.Model):
         Returns:
             str: A string representation of the Appointment object.
         """
-        return f"Appointment('{self.appointment_name}', '{self.appointment_date}')"
+        return f"Appointment('{self.appointment_name}', '{self.appointment_date}', {self.appointment_time}')"
