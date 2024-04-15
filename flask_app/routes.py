@@ -19,7 +19,6 @@ from flask import jsonify
 @app.route("/home")
 def home():
     active_nav = 'home'
-    print(current_user)
     return render_template("home.html", active_nav=active_nav)
 
 
@@ -125,6 +124,11 @@ def appointments():
             date=form.date.data,
             time=form.time.data,
             description=form.description.data)
+        
+        db.session.add(new_appointment)
+        db.session.commit()
+        flash('Appointment created successfully!', 'success')
+        return redirect(url_for('appointments'))
             
     elif user_type == 'therapist' and form.validate_on_submit():
         new_appointment = Appointment(
