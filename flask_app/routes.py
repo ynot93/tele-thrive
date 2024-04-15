@@ -11,7 +11,6 @@ from flask_app.models.user import User
 from flask_app.models.therapist_rating import TherapistRating
 from flask_app.models.post import Post
 from flask import session
-# from .id_generator import generate_unique_user_id, generate_unique_therapist_id
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import jsonify
 
@@ -19,22 +18,46 @@ from flask import jsonify
 @app.route("/")
 @app.route("/home")
 def home():
+    """
+    Render the home page.
+
+    Returns:
+        str: Rendered HTML template for the home page.
+    """
     active_nav = 'home'
     return render_template("home.html", active_nav=active_nav)
 
 
 @app.route("/about")
 def about():
+    """
+    Render the about page.
+
+    Returns:
+        str: Rendered HTML template for the about page.
+    """
     active_nav = 'about'
     return render_template("about.html", title='About', active_nav=active_nav)
 
 @app.route("/for-therapist")
 def for_therapist():
+    """
+    Render the for therapist page.
+
+    Returns:
+    str: Rendered HTML template for the for therapist page.
+    """
     active_nav = 'for_therapist'
     return render_template("for_therapist.html", title='For Therapist', active_nav=active_nav)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    """
+    Render the registration page and handle user registration.
+
+    Returns:
+        str: Rendered HTML template for the registration page.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = RegistrationForm()
@@ -52,6 +75,12 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    """
+    Render the login page and handle user login.
+
+    Returns:
+        str: Rendered HTML template for the login page.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
@@ -81,6 +110,12 @@ def login():
 
 @app.route("/register/therapist", methods=['GET', 'POST'])
 def register_therapist():
+    """
+    Render the therapist registration page and handle therapist registration.
+
+    Returns:
+        str: Rendered HTML template for the therapist registration page.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = TherapistRegistrationForm()
@@ -102,6 +137,12 @@ def register_therapist():
 @app.route("/dashboard/appointments", methods=["GET", "POST"])
 @login_required
 def appointments():
+    """
+    Render the appointments page and handle appointment creation.
+
+    Returns:
+        str: Rendered HTML template for the appointments page.
+    """
     active_nav = 'appointments'
     active_nav_db = 'dashboard'
     
@@ -142,6 +183,12 @@ def appointments():
 
 @app.route('/therapists', methods=['GET'])
 def get_therapists():
+    """
+    Get a list of therapists.
+
+    Returns:
+        str: JSON representation of therapist data.
+    """
     therapists = Therapist.query.filter_by(specialization='filter_value').all()
     therapist_data = [therapist.serialize() for therapist in therapists]
     return jsonify(therapist_data)
@@ -149,6 +196,15 @@ def get_therapists():
 
 @app.route('/therapists/<therapist_id>/rate', methods=['POST'])
 def rate_therapist(therapist_id):
+    """
+    Rate a therapist.
+
+    Args:
+        therapist_id (str): The ID of the therapist being rated.
+
+    Returns:
+        str: JSON response confirming the rating submission.
+    """
     therapist = Therapist.query.get(therapist_id)
     rating = request.json.get('rating')
     therapist_rating = TherapistRating(therapist_id=therapist_id, rating=rating)
@@ -160,6 +216,12 @@ def rate_therapist(therapist_id):
 # Render therapists.html template
 @app.route('/dashboard/therapists', methods=['GET'])
 def view_therapists():
+    """
+    Render the view therapists page.
+
+    Returns:
+        str: Rendered HTML template for the view therapists page.
+    """
     active_nav = 'therapists'
     active_nav_db = 'dashboard'
     therapists = Therapist.query.all()
@@ -169,17 +231,41 @@ def view_therapists():
 # Render rate_therapist.html template
 @app.route('/therapists/<therapist_id>/rate', methods=['GET'])
 def view_rate_therapist(therapist_id):
+    """
+    Render the rate therapist page.
+
+    Args:
+        therapist_id (str): The ID of the therapist being rated.
+
+    Returns:
+        str: Rendered HTML template for the rate therapist page.
+    """
     therapist = Therapist.query.get(therapist_id)
     return render_template('rate_therapist.html', therapist=therapist)
 
  
 @app.route("/logout")
 def logout():
+    """
+    Log out the user.
+
+    Returns:
+        str: Redirects to the home page after logging out.
+    """
     logout_user()
     return redirect(url_for('home'))
 
 
 def save_pic(picture):
+    """
+    Save a profile picture.
+
+    Args:
+        picture (file): The image file to be saved.
+
+    Returns:
+        str: The filename of the saved picture.
+    """
     hex_value = secrets.token_hex(8)
     file_name, ext = os.path.splitext(picture.filename)
     new_filename = hex_value + ext
@@ -196,6 +282,12 @@ def save_pic(picture):
 @app.route("/dashboard/profile", methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    """
+    Render the dashboard page.
+
+    Returns:
+        str: Rendered HTML template for the dashboard page.
+    """
     print(current_user)
     active_nav = 'profile'
     active_nav_db = 'dashboard'
@@ -249,12 +341,15 @@ def dashboard():
     else:
         return redirect(url_for('home'))
 
-# @app.route("/dashboard/profile", methods=['GET', 'POST'])
-# @login_required
-# def dashboard_profile():
 
 @app.route("/health-analysis", methods=['GET', 'POST'])
-def health_analysis():    
+def health_analysis():
+    """
+    Perform health analysis.
+
+    Returns:
+        str: Rendered HTML template for the health analysis page.
+    """
     if request.method == 'POST':
         scores = []
         for i in range(1, 13):
@@ -282,6 +377,12 @@ def health_analysis():
 
 @app.route("/display-results")
 def display_results():
+    """
+    Display health analysis results.
+
+    Returns:
+        str: Rendered HTML template for displaying health analysis results.
+    """
     response = session.get('custom_response')
     
     return render_template('results.html', response=response)
@@ -290,12 +391,18 @@ def display_results():
 @app.route("/meeting")
 @login_required
 def meeting():
+    """
+    Render the meeting page.
+    """
     return render_template('meeting.html', username=current_user.username)
 
 
 @app.route("/join", methods=["GET", "POST"])
 @login_required
 def join():
+    """
+    Handle joining a meeting.
+    """
     if request.method == "POST":
         room_id = request.form.get("roomID")
         if isinstance(current_user, Therapist):
@@ -308,6 +415,10 @@ def join():
 @app.route("/therapist/meeting")
 @login_required
 def therapist_meeting():
+    """
+    Render the therapist meeting page.
+    """
+
     if isinstance(current_user, Therapist):
         return render_template('meeting.html', username=current_user.username)
 
@@ -315,6 +426,9 @@ def therapist_meeting():
 @app.route("/therapist/join", methods=["GET", "POST"])
 @login_required
 def therapist_join():
+    """
+    Handle therapist joining a meeting.
+    """
     if request.method == "POST":
         room_id = request.form.get("roomID")
         return redirect(f"/therapist/meeting?roomID={room_id}")
@@ -334,6 +448,9 @@ def posts():
 @app.route('/posts', methods=['POST'])
 @login_required
 def create_post():
+    """
+    Retrieve posts from the database.
+    """
     content = request.json.get('content')
     if not content:
         return jsonify({'error': 'Content is required'}), 400
