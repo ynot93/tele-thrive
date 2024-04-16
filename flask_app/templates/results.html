@@ -7,6 +7,6 @@
         <h1> Here are your results</h1>
     {% endif %}
     <p>{{ response }}</p>
-    <button type="button" class="btn btn-outline-secondary btn-block"><a href="{{ url_for('user_profile') }}">Book an appointment with a Therapist</a></button>
+    <a href="{{ url_for('appointments') }}"><button type="button" class="btn btn-outline-secondary btn-block">Book an appointment with a Therapist</button></a>
 </div>
 {% endblock content %}
