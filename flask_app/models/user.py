@@ -27,7 +27,7 @@ class User(db.Model, UserMixin):
         image_profile (str): The filename of the user's profile image.
         appointments (relationship): The appointments associated with the user.
     """
-    id = db.Column(db.String,  default=random_integer, primary_key=True, unique=True)
+    id = db.Column(db.Integer,  default=random_integer, primary_key=True, unique=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)

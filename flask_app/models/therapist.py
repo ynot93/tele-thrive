@@ -22,7 +22,7 @@ class Therapist(db.Model, UserMixin):
         ratings (relationship): One-to-many relationship with TherapistRating model.
     """""
     
-    id = db.Column(db.String,  default=random_integer, primary_key=True, unique=True)
+    id = db.Column(db.Integer,  default=random_integer, primary_key=True, unique=True)
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     username = db.Column(db.String(20), unique=True, nullable=False)
